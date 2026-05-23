@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Art of Beginning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+/* ── ROOT ─────────────────────────── */
+:root {
+  --cream:   #f7f2e9;
+  --cream2:  #ede5d4;
+  --ink:     #1b1208;
+  --ink2:    #3b2e1a;
+  --gold:    #b8892a;
+  --gold2:   #e0b060;
+  --sienna:  #8b4a1c;
+  --sage:    #4a5c3a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+/* grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.45;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  overflow-x: hidden;
+}
+
+/* ── CUSTOM CURSOR ───────────────── */
+*, body { cursor: none !important; }
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  transition: all 0.12s ease;
+  opacity: 0.5;
+}
+body:has(a:hover) #cursor,
+body:has(button:hover) #cursor { width: 22px; height: 22px; background: var(--sienna); }
+
+/* ── MASTHEAD ────────────────────── */
+.masthead {
+  text-align: center;
+  padding: 3.5rem 2rem 0;
+  position: relative;
+}
+.masthead-rule {
+  display: flex; align-items: center; gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.masthead-rule::before,
+.masthead-rule::after {
+  content: '';
+  flex: 1; max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.masthead-rule::after { background: linear-gradient(90deg, var(--gold), transparent); }
+.masthead-ornament {
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+}
+
+.pub-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 0.92;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.pub-name em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.pub-tagline {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink2);
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+  opacity: 0.75;
+}
+
+.date-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink2);
+  padding: 0.5rem 0;
+  margin: 0 2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+/* ── HERO SPREAD ─────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--ink2);
+  margin: 0 2rem;
+  padding: 3rem 0;
+}
+
+.hero-side {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero-side:first-child { border-right: 1px solid rgba(27,18,8,0.18); }
+.hero-side:last-child  { border-left: 1px solid rgba(27,18,8,0.18); }
+
+.pull-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--ink2);
+  position: relative;
+  padding-left: 1.2rem;
+}
+.pull-quote::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--gold);
+}
+
+.side-item-label {
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+.side-item-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* ── HERO CENTER ─────────────────── */
+.hero-center { padding: 0 3rem; position: relative; }
+
+.hero-kicker {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--sienna);
+  background: rgba(139,74,28,0.08);
+  padding: 0.3rem 0.8rem;
+  border-left: 3px solid var(--sienna);
+  margin-bottom: 1.5rem;
+}
+
+.hero-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -1px;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+  position: relative;
+}
+.hero-heading .drop-cap::first-letter {
+  float: left;
+  font-size: 5.5em;
+  line-height: 0.76;
+  margin: 0.06em 0.08em 0 0;
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+}
+
+.hero-dek {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--ink2);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+  border-top: 1px solid rgba(27,18,8,0.15);
+  padding-top: 1.2rem;
+}
+
+.author-line {
+  display: flex; align-items: center; gap: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink2);
+  font-weight: 600;
+}
+.author-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--sienna));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.author-sep { color: rgba(27,18,8,0.25); }
+
+/* ── VISUAL BLOCK ────────────────── */
+.visual-block {
+  margin: 0 2rem;
+  background: linear-gradient(160deg, var(--ink) 0%, #2c1a06 60%, var(--ink2) 100%);
+  overflow: hidden;
+  position: relative;
+  height: 420px;
+  display: flex; align-items: center; justify-content: center;
+}
+.visual-block svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.25;
+}
+.visual-text {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+.visual-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.2;
+  max-width: 700px;
+  margin: 0 auto 1.2rem;
+}
+.visual-quote em { color: var(--gold2); font-style: normal; }
+.visual-attr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.88rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(247,242,233,0.5);
+}
+
+/* ── BODY TEXT SECTION ───────────── */
+.article-body {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0;
+  margin: 0 2rem;
+  padding: 3.5rem 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.article-main { padding-right: 3.5rem; border-right: 1px solid rgba(27,18,8,0.18); }
+
+.article-main p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--ink2);
+  margin-bottom: 1.4rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.article-main p:first-of-type::first-letter {
+  float: left;
+  font-family: 'Playfair Display', serif;
+  font-size: 4.4em;
+  line-height: 0.78;
+  margin: 0.05em 0.1em 0 0;
+  color: var(--sienna);
+  font-weight: 900;
+}
+
+.inline-hl {
+  background: linear-gradient(180deg, transparent 55%, rgba(184,137,42,0.25) 55%);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.article-sidebar { padding-left: 2.5rem; }
+
+.sidebar-block {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--cream2);
+}
+.sidebar-block:last-child { border-bottom: none; margin-bottom: 0; }
+
+.sidebar-label {
+  font-size: 0.62rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+.sidebar-list {
+  list-style: none;
+}
+.sidebar-list li {
+  font-size: 0.92rem;
+  color: var(--ink2);
+  line-height: 1.55;
+  margin-bottom: 0.6rem;
+  padding-left: 1.1rem;
+  position: relative;
+}
+.sidebar-list li::before {
+  content: '◆';
+  position: absolute; left: 0;
+  font-size: 0.4rem;
+  color: var(--gold);
+  top: 0.42em;
+}
+
+.number-stat {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+.number-stat span { color: var(--gold); }
+.number-desc {
+  font-size: 0.82rem;
+  color: var(--ink2);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* ── THREE-COL FEATURES ──────────── */
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 2rem;
+  border-bottom: 1px solid rgba(27,18,8,0.18);
+}
+.feature {
+  padding: 2.5rem 2rem;
+  border-right: 1px solid rgba(27,18,8,0.18);
+  transition: background 0.35s;
+  position: relative;
+  overflow: hidden;
+}
+.feature:last-child { border-right: none; }
+.feature::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.feature:hover { background: rgba(184,137,42,0.04); }
+.feature:hover::after { transform: scaleX(1); }
+
+.feature-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: rgba(184,137,42,0.15);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.feature h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+  line-height: 1.25;
+}
+.feature p {
+  font-size: 0.92rem;
+  color: var(--ink2);
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* ── FOOTER ──────────────────────── */
+footer {
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  position: relative;
+}
+.footer-rule {
+  display: flex; align-items: center; gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.footer-rule::before,
+.footer-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(27,18,8,0.2);
+}
+.footer-ornament {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.footer-copy {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(27,18,8,0.35);
+  font-weight: 600;
+}
+
+/* ── ANIMATIONS ──────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.pub-name     { animation: fadeUp 0.9s 0.1s both; }
+.pub-tagline  { animation: fadeIn 0.8s 0.5s both; }
+.date-bar     { animation: fadeIn 0.8s 0.7s both; }
+.hero         { animation: fadeUp 1s 0.6s both; }
+.visual-block { animation: fadeIn 1s 0.9s both; }
+.article-body { animation: fadeUp 1s 1.1s both; }
+.features     { animation: fadeUp 1s 1.3s both; }
+.hero-kicker  { animation: slideIn 0.7s 0.8s both; }
+
+/* ── RESPONSIVE ──────────────────── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-side { display: none; }
+  .hero-center { padding: 0; }
+  .article-body { grid-template-columns: 1fr; }
+  .article-main { padding-right: 0; border-right: none; border-bottom: 1px solid rgba(27,18,8,0.15); padding-bottom: 2.5rem; margin-bottom: 2.5rem; }
+  .article-sidebar { padding-left: 0; }
+  .features { grid-template-columns: 1fr; }
+  .feature { border-right: none; border-bottom: 1px solid rgba(27,18,8,0.12); }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-rule">
+    <span class="masthead-ornament">✦ Est. Since the First Word ✦</span>
+  </div>
+  <div class="pub-name">My <em>First</em><br>Heading</div>
+  <div class="pub-tagline">Where every paragraph begins a new world</div>
+  <div class="date-bar" style="max-width:1060px;margin:0 auto">
+    <span>Volume I &nbsp;·&nbsp; Issue 001</span>
+    <span>✦ &nbsp; The Opening Edition &nbsp; ✦</span>
+    <span>Est. Today &nbsp;·&nbsp; Price: Priceless</span>
+  </div>
+</header>
+
+<!-- HERO SPREAD -->
+<div class="hero">
+  <div class="hero-side">
+    <div>
+      <div class="side-item-label">Today's Focus</div>
+      <div class="side-item-val">The beauty of starting with a blank page</div>
+    </div>
+    <div class="pull-quote">
+      "The first word you write is a promise to the reader — and to yourself."
+    </div>
+    <div>
+      <div class="side-item-label">In This Issue</div>
+      <div class="side-item-val" style="font-size:0.88rem;line-height:1.7;color:var(--ink2)">
+        First paragraphs · Opening moves · The courage of beginnings · Finding your voice
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-center">
+    <div class="hero-kicker">Feature Essay</div>
+    <h1 class="hero-heading">
+      <span class="drop-cap">The Art of the First Paragraph</span>
+    </h1>
+    <p class="hero-dek">
+      Every great story, every landmark document, every life-changing letter — they all began the same way: with a first paragraph written by someone who dared to begin.
+    </p>
+    <div class="author-line">
+      <div class="author-avatar">M</div>
+      <span>My First Paragraph</span>
+      <span class="author-sep">·</span>
+      <span>Opening Edition</span>
+      <span class="author-sep">·</span>
+      <span>5 min read</span>
+    </div>
+  </div>
+
+  <div class="hero-side">
+    <div>
+      <div class="side-item-label">Opening Stat</div>
+      <div class="number-stat">1<span>st</span></div>
+      <div class="number-desc">The only paragraph that truly matters — the one that makes the reader lean in.</div>
+    </div>
+    <div class="pull-quote">
+      "A heading is an invitation. A paragraph is where the conversation begins."
+    </div>
+  </div>
+</div>
+
+<!-- VISUAL BANNER -->
+<div class="visual-block">
+  <!-- decorative SVG geometry -->
+  <svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="200" cy="200" r="300" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <circle cx="200" cy="200" r="200" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <circle cx="200" cy="200" r="100" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <circle cx="1000" cy="220" r="280" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <circle cx="1000" cy="220" r="160" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <line x1="0" y1="210" x2="1200" y2="210" stroke="#b8892a" stroke-width="0.4"/>
+    <line x1="600" y1="0" x2="600" y2="420" stroke="#b8892a" stroke-width="0.4"/>
+    <polygon points="600,40 680,200 600,360 520,200" fill="none" stroke="#b8892a" stroke-width="0.5"/>
+    <polygon points="600,80 700,210 600,340 500,210" fill="none" stroke="#e0b060" stroke-width="0.3"/>
+  </svg>
+  <div class="visual-text">
+    <div class="visual-quote">
+      "My first paragraph <em>changed everything</em> — because it existed."
+    </div>
+    <div class="visual-attr">✦ &nbsp; The Writer's Creed &nbsp; ✦</div>
+  </div>
+</div>
+
+<!-- ARTICLE BODY -->
+<div class="article-body">
+  <div class="article-main">
+    <p>
+      My first paragraph. Four words that contain multitudes. In those four words lives the seed of every essay ever written, every idea ever articulated, every confession ever made to a page. This is where it begins — not with fanfare, but with the quiet audacity of putting words in a row and deciding that they matter.
+    </p>
+    <p>
+      Consider what it takes to write a first paragraph. You must believe, even briefly, that what you have to say is worth the reader's time. You must overcome the terror of the blank page — that white expanse that judges all who approach it. And yet, <span class="inline-hl">every writer who has ever mattered has done exactly this: begun.</span>
+    </p>
+    <p>
+      The heading is the handshake — firm, confident, the promise of what's to come. But the paragraph? The paragraph is the room you invite someone into. It has atmosphere, texture, temperature. A good first paragraph makes the reader forget they are reading and simply feel that they are <em>inside</em> something true.
+    </p>
+    <p>
+      We often imagine that great writing appears fully formed, that somewhere geniuses type their first sentences and produce masterworks. The reality is far more beautiful and human: every first paragraph was once a hesitation. Every "My first paragraph" once sounded hollow to the person writing it — until, sentence by sentence, it didn't.
+    </p>
+    <p>
+      So write your first paragraph. Then your second. The page will meet you there, patient and permanent, ready to hold whatever you choose to leave upon it.
+    </p>
+  </div>
+
+  <aside class="article-sidebar">
+    <div class="sidebar-block">
+      <div class="sidebar-label">The Essentials</div>
+      <ul class="sidebar-list">
+        <li>A heading announces your intention</li>
+        <li>A paragraph delivers on the promise</li>
+        <li>White space gives the words room to breathe</li>
+        <li>Typography shapes how words feel, not just read</li>
+        <li>Every sentence earns the right to the next</li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">By the Numbers</div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div>
+          <div class="number-stat">26<span style="font-size:1.8rem">k</span></div>
+          <div class="number-desc">Words in the average novel chapter — all starting from a first paragraph like yours</div>
+        </div>
+        <div>
+          <div class="number-stat">0.3<span style="font-size:1.8rem">s</span></div>
+          <div class="number-desc">How quickly a reader decides whether to keep reading — make it count</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-block">
+      <div class="sidebar-label">Words to Know</div>
+      <div style="font-size:0.88rem;color:var(--ink2);line-height:1.7">
+        <strong style="color:var(--ink);font-family:'Playfair Display',serif">Lede</strong> <em style="color:var(--gold)">(n.)</em><br>
+        The opening sentences of an article, designed to hook the reader and make them continue. From newspaper typesetting tradition.
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- THREE FEATURES -->
+<div class="features">
+  <div class="feature">
+    <div class="feature-num">01</div>
+    <h3>The Power of a Heading</h3>
+    <p>A great heading does not describe — it summons. It reaches out of the page and taps the reader on the shoulder, whispering: <em>this one is for you.</em></p>
+  </div>
+  <div class="feature">
+    <div class="feature-num">02</div>
+    <h3>The Paragraph as Architecture</h3>
+    <p>Each paragraph is a room in the house of your essay. The doorway is the topic sentence, the furniture is the evidence, and the window is where you let the light of meaning in.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-num">03</div>
+    <h3>The Courage to Continue</h3>
+    <p>The second paragraph is harder than the first. The third harder still. Mastery is simply refusing to stop until you have something worth reading.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-rule">
+    <div class="footer-ornament">❧</div>
+  </div>
+  <div class="footer-copy">My First Heading &nbsp;·&nbsp; My First Paragraph &nbsp;·&nbsp; The Beginning of Everything</div>
+</footer>
+
+<script>
+/* ── CURSOR ──────────────────────── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function loop() {
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  cur.style.left  = mx + 'px';
+  cur.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+
+/* ── SCROLL PARALLAX ON VISUAL ───── */
+const vb = document.querySelector('.visual-block');
+window.addEventListener('scroll', () => {
+  if (!vb) return;
+  const r = vb.getBoundingClientRect();
+  const progress = -r.top / (window.innerHeight + r.height);
+  vb.querySelector('.visual-text').style.transform = `translateY(${progress * 40}px)`;
+}, { passive: true });
+
+/* ── HOVER LIFT ON FEATURES ─────── */
+document.querySelectorAll('.feature').forEach(f => {
+  f.addEventListener('mouseenter', () => f.style.transform = 'translateY(-4px)');
+  f.addEventListener('mouseleave', () => f.style.transform = '');
+  f.style.transition = 'background 0.35s, transform 0.3s';
+});
+</script>
+</body>
+</html>
