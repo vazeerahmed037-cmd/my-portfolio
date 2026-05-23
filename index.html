@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>M. Vazeer Ahmed — Linux Systems Consultant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080c10;
+    --bg2:       #0d1117;
+    --bg3:       #111822;
+    --accent:    #00e5a0;
+    --accent2:   #00b8ff;
+    --accent3:   #7b61ff;
+    --text:      #c9d8e8;
+    --muted:     #5a7a9a;
+    --card:      rgba(13,22,35,0.85);
+    --border:    rgba(0,229,160,0.15);
+    --glow:      0 0 20px rgba(0,229,160,0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS BACKGROUND ─────────────────── */
+  #bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── SCROLLBAR ─────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* ── LAYOUT ────────────────────────────── */
+  .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── NAV ───────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,12,16,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--accent);
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ──────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 5rem;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .hero-badge::before {
+    content: '';
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    color: #e8f4ff;
+    margin-bottom: 0.5rem;
+  }
+  .hero-name span { color: var(--accent); }
+
+  .hero-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent2);
+    margin-bottom: 1.5rem;
+  }
+  .cursor {
+    display: inline-block;
+    width: 10px; height: 1.1em;
+    background: var(--accent2);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    padding: 0.75rem 1.8rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #050a08;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 0 30px rgba(0,229,160,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(0,229,160,0.6); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* ── TERMINAL CARD ─────────────────────── */
+  .terminal {
+    width: 300px;
+    background: #0a0f16;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,229,160,0.1), 0 30px 80px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+  .term-bar {
+    background: #161d28;
+    padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .term-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .term-dot.r { background: #ff5f56; }
+  .term-dot.y { background: #ffbd2e; }
+  .term-dot.g { background: #27c93f; }
+  .term-body {
+    padding: 1.2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.8;
+  }
+  .term-line { display: block; }
+  .term-line.cmd { color: var(--accent); }
+  .term-line.val { color: #a8c8e8; padding-left: 1rem; }
+  .term-line.key { color: var(--accent2); }
+  .term-line.muted { color: var(--muted); }
+  .term-line.sep { color: #1e3040; padding: 0.2rem 0; }
+  .term-prompt { color: var(--accent3); }
+  .term-highlight { color: var(--accent); font-weight: 700; }
+
+  /* ── STATS STRIP ───────────────────────── */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 5rem 0;
+  }
+  .stat-item {
+    background: var(--bg2);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--accent);
+    font-family: 'Exo 2', sans-serif;
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 0.4rem;
+  }
+
+  /* ── SECTION HEADER ─────────────────────── */
+  .sec-head { margin-bottom: 3rem; }
+  .sec-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 200px; }
+  .sec-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #e8f4ff;
+    line-height: 1.1;
+  }
+  .sec-title span { color: var(--accent); }
+
+  section { padding: 6rem 0; }
+
+  /* ── SKILLS ─────────────────────────────── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.8rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .skill-card:hover { border-color: rgba(0,229,160,0.4); transform: translateY(-4px); }
+  .skill-card:hover::before { transform: scaleX(1); }
+
+  .skill-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+  .skill-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .skill-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #d8ecff;
+    margin-bottom: 0.8rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    background: rgba(0,229,160,0.07);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,160,0.2);
+    letter-spacing: 0.5px;
+  }
+  .tag.blue { background: rgba(0,184,255,0.07); color: var(--accent2); border-color: rgba(0,184,255,0.2); }
+  .tag.purple { background: rgba(123,97,255,0.07); color: var(--accent3); border-color: rgba(123,97,255,0.2); }
+
+  /* ── EXPERIENCE ─────────────────────────── */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    margin-left: 1.5rem;
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .tl-dot-wrap { display: flex; justify-content: center; padding-top: 0.3rem; }
+  .tl-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow: var(--glow);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tl-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: border-color 0.3s;
+  }
+  .tl-card:hover { border-color: rgba(0,229,160,0.35); }
+
+  .tl-meta {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+  .tl-company {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #e8f4ff;
+  }
+  .tl-period {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(0,229,160,0.08);
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0,229,160,0.2);
+  }
+  .tl-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--accent2);
+    margin-bottom: 1.2rem;
+  }
+  .tl-client {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .tl-client span { color: var(--text); }
+  .tl-list { list-style: none; }
+  .tl-list li {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .tl-list li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 0.7rem;
+    top: 0.25rem;
+  }
+
+  /* ── CERTIFICATIONS ─────────────────────── */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .cert-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    transition: all 0.3s;
+  }
+  .cert-card:hover { border-color: rgba(0,184,255,0.4); transform: translateY(-3px); }
+  .cert-icon {
+    width: 48px; height: 48px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    background: rgba(0,184,255,0.08);
+    border: 1px solid rgba(0,184,255,0.2);
+  }
+  .cert-card h3 { font-size: 0.95rem; font-weight: 600; color: #d8ecff; margin-bottom: 0.3rem; }
+  .cert-card p { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── EDUCATION ──────────────────────────── */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .edu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .edu-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, rgba(123,97,255,0.1), transparent);
+    border-radius: 50%;
+    transform: translate(30%, 30%);
+  }
+  .edu-card:hover { border-color: rgba(123,97,255,0.35); transform: translateY(-3px); }
+  .edu-year {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    margin-bottom: 0.6rem;
+  }
+  .edu-degree { font-size: 0.95rem; font-weight: 700; color: #d8ecff; margin-bottom: 0.4rem; }
+  .edu-inst { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.2rem; }
+  .edu-uni { font-size: 0.75rem; color: var(--accent3); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── CONTACT ─────────────────────────────── */
+  #contact { background: linear-gradient(135deg, var(--bg2) 0%, var(--bg) 100%); }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .contact-info { }
+  .contact-info p { color: var(--muted); margin-bottom: 2rem; }
+
+  .contact-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-list li {
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .ci-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: rgba(0,229,160,0.07);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .ci-label { font-size: 0.72rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .ci-val { font-size: 0.92rem; color: var(--text); }
+
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2.5rem;
+  }
+  .contact-card h3 { font-size: 1.2rem; font-weight: 700; color: #e8f4ff; margin-bottom: 0.5rem; }
+  .contact-card p { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .personal-facts { display: flex; flex-direction: column; gap: 0.8rem; }
+  .pf-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .pf-row:last-child { border-bottom: none; }
+  .pf-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .pf-val { font-size: 0.88rem; color: var(--text); }
+
+  /* ── FOOTER ──────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  footer span { color: var(--accent); }
+
+  /* ── SCROLL REVEAL ──────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ─────────────────────────── */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .terminal { width: 100%; max-width: 320px; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .contact-inner { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">$ vazeer@infosys:~</div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">Linux Systems Consultant</div>
+        <h1 class="hero-name">M. Vazeer<br><span>Ahmed</span></h1>
+        <div class="hero-title">
+          <span id="typed"></span><span class="cursor"></span>
+        </div>
+        <p class="hero-desc">
+          10+ years of enterprise-grade Linux & Solaris administration. Currently driving infrastructure excellence at Infosys for Cummins — from RHEL upgrades to hybrid-cloud monitoring.
+        </p>
+        <div class="hero-btns">
+          <a href="mailto:vazeerahmed037@gmail.com" class="btn btn-primary">Get In Touch</a>
+          <a href="#experience" class="btn btn-outline">View Experience</a>
+        </div>
+      </div>
+
+      <!-- TERMINAL CARD -->
+      <div class="terminal">
+        <div class="term-bar">
+          <div class="term-dot r"></div>
+          <div class="term-dot y"></div>
+          <div class="term-dot g"></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:#4a6a8a;margin-left:auto">bash — 80×24</span>
+        </div>
+        <div class="term-body">
+          <span class="term-line"><span class="term-prompt">$</span> <span style="color:#d8ecff">whoami</span></span>
+          <span class="term-line val"><span class="term-highlight">vazeer.ahmed</span></span>
+          <span class="term-line sep">──────────────────</span>
+          <span class="term-line"><span class="term-prompt">$</span> <span style="color:#d8ecff">cat profile.json</span></span>
+          <span class="term-line val"><span style="color:#5a7a9a">{</span></span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"role"</span>: <span style="color:var(--accent)">"Consultant"</span>,</span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"org"</span>: <span style="color:var(--accent)">"Infosys"</span>,</span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"client"</span>: <span style="color:var(--accent)">"Cummins"</span>,</span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"exp"</span>: <span style="color:var(--accent2)">"+10 yrs"</span>,</span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"cert"</span>: <span style="color:var(--accent2)">"CCNA"</span>,</span>
+          <span class="term-line val">&nbsp;&nbsp;<span class="term-key">"os"</span>: <span style="color:var(--accent3)">"RHEL 6/7/8/9"</span></span>
+          <span class="term-line val"><span style="color:#5a7a9a">}</span></span>
+          <span class="term-line sep">──────────────────</span>
+          <span class="term-line muted">▸ uptime: 10+ years</span>
+          <span class="term-line"><span class="term-prompt">$</span> <span style="color:#5a7a9a">_</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="wrap">
+  <div class="stats-strip reveal">
+    <div class="stat-item">
+      <span class="stat-num">10<span style="color:var(--accent2);font-size:1.5rem">+</span></span>
+      <span class="stat-label">Years Experience</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">2</span>
+      <span class="stat-label">Enterprise Clients</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">9</span>
+      <span class="stat-label">RHEL Versions</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">1</span>
+      <span class="stat-label">CCNA Certified</span>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-label">Technical Arsenal</div>
+      <h2 class="sec-title">Skills &amp; <span>Expertise</span></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <span class="skill-icon">🐧</span>
+        <div class="skill-cat">Core Expertise</div>
+        <h3>Linux / Unix Administration</h3>
+        <div class="skill-tags">
+          <span class="tag">RHEL 6/7/8/9</span>
+          <span class="tag">OEL</span>
+          <span class="tag">CentOS</span>
+          <span class="tag">Solaris</span>
+          <span class="tag">User Mgmt</span>
+          <span class="tag">File Systems</span>
+          <span class="tag">Patching</span>
+          <span class="tag">NFS</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">📊</span>
+        <div class="skill-cat">Monitoring</div>
+        <h3>Observability & Performance</h3>
+        <div class="skill-tags">
+          <span class="tag blue">Splunk</span>
+          <span class="tag blue">Dynatrace</span>
+          <span class="tag blue">CPU/Mem/I/O</span>
+          <span class="tag blue">Hybrid Cloud</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🌐</span>
+        <div class="skill-cat">Networking</div>
+        <h3>Network & Infrastructure</h3>
+        <div class="skill-tags">
+          <span class="tag blue">CCNA</span>
+          <span class="tag blue">Packet Tracer</span>
+          <span class="tag blue">Boson Sim</span>
+          <span class="tag blue">NFS</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🗃️</span>
+        <div class="skill-cat">Virtualisation & Backup</div>
+        <h3>VMware & Storage</h3>
+        <div class="skill-tags">
+          <span class="tag purple">VMware vSphere</span>
+          <span class="tag purple">Veritas NetBackup</span>
+          <span class="tag purple">Backup Verify</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">🎫</span>
+        <div class="skill-cat">ITSM</div>
+        <h3>Ticketing & ITIL</h3>
+        <div class="skill-tags">
+          <span class="tag">ServiceNow</span>
+          <span class="tag">Remedy</span>
+          <span class="tag">ITIL</span>
+          <span class="tag">Change Mgmt</span>
+          <span class="tag">SLA</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <span class="skill-icon">💻</span>
+        <div class="skill-cat">Programming</div>
+        <h3>Scripting & Languages</h3>
+        <div class="skill-tags">
+          <span class="tag purple">Shell Script</span>
+          <span class="tag purple">C</span>
+          <span class="tag purple">COBOL</span>
+          <span class="tag purple">JCL</span>
+          <span class="tag purple">DB2</span>
+          <span class="tag purple">Putty</span>
+          <span class="tag purple">WinSCP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-label">Career Journey</div>
+      <h2 class="sec-title">Professional <span>Experience</span></h2>
+    </div>
+    <div class="timeline">
+      <!-- Infosys -->
+      <div class="tl-item reveal">
+        <div class="tl-dot-wrap">
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-meta">
+            <div class="tl-company">Infosys Limited</div>
+            <div class="tl-period">Mar 2023 — Present</div>
+          </div>
+          <div class="tl-role">Consultant — Linux Administrator · Chennai</div>
+          <div class="tl-client">Client: <span>Cummins Inc.</span></div>
+          <ul class="tl-list">
+            <li>Upgraded Linux servers across RHEL/OEL 6→7, 7→8, and 8→9, improving performance and security posture.</li>
+            <li>Delivered enterprise monitoring for full hybrid-compute infrastructure including server, storage, network, and public/private cloud.</li>
+            <li>Identified and implemented automation opportunities to eliminate single points of failure and reduce operational costs.</li>
+            <li>Resolved ServiceNow tickets in strict adherence to defined Service Level Agreements.</li>
+            <li>Supported change enablement, release, and deployment management activities per operational procedures.</li>
+            <li>Full lifecycle support: installation, configuration, maintenance of Unix, OEL, and RHEL systems.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- HCL -->
+      <div class="tl-item reveal">
+        <div class="tl-dot-wrap">
+          <div class="tl-dot" style="border-color:var(--accent2);box-shadow:0 0 15px rgba(0,184,255,0.4)"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-meta">
+            <div class="tl-company">HCL Technologies Ltd.</div>
+            <div class="tl-period">Sep 2016 — Mar 2023</div>
+          </div>
+          <div class="tl-role">Specialist — Linux Administration · Madurai</div>
+          <div class="tl-client">Client: <span>Cummins (Global — Prod, Dev, Staging)</span></div>
+          <ul class="tl-list">
+            <li>Administered Linux and Solaris servers for Cummins global environments across production, development, and staging.</li>
+            <li>Monitored and resolved incidents via Remedy within defined SLAs.</li>
+            <li>Managed user accounts — creation, modification, UID/GID standardization — and file permission configurations.</li>
+            <li>Applied patches, updated packages, and executed OS upgrades seamlessly.</li>
+            <li>Troubleshot system performance bottlenecks related to CPU, memory, and I/O utilization.</li>
+            <li>Handled network printers, NFS mounts, crontab scheduling, and backup verification.</li>
+            <li>Coordinated with hardware and OS vendors to resolve critical issues.</li>
+            <li>Provided training and knowledge transfer sessions to new team members.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-label">Credentials</div>
+      <h2 class="sec-title">Certifications &amp; <span>Achievements</span></h2>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card reveal">
+        <div class="cert-icon">🔵</div>
+        <div>
+          <h3>CCNA — Cisco Certified Network Associate</h3>
+          <p>TANDEM Institute, Madurai · 4-month intensive program</p>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">🏆</div>
+        <div>
+          <h3>Technopreneurship 2008</h3>
+          <p>National-level symposium participant</p>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-icon">⚙️</div>
+        <div>
+          <h3>Event Coordinator — ULTRAZEST 08 & METEURKEN 07</h3>
+          <p>Organized workshops on Recent Trends in Robotics</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-label">Academic Background</div>
+      <h2 class="sec-title">Education &amp; <span>Qualifications</span></h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-year">2006 – 2010</div>
+        <div class="edu-degree">B.E. – Electronics &amp; Communication Engineering</div>
+        <div class="edu-inst">Aalim Muhammed Salegh College of Engineering</div>
+        <div class="edu-uni">Anna University, Chennai</div>
+        <div style="margin-top:1rem; font-size:0.78rem; color:var(--muted); line-height:1.5">
+          <strong style="color:var(--accent)">Project:</strong> Vibration Analysis of Electric Motors using MATLAB &amp; DEWESOFT — isolating noise from vibration using accelerometers.
+        </div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">2006</div>
+        <div class="edu-degree">Higher Secondary Certificate (HSC)</div>
+        <div class="edu-inst">Devangar Hr. Sec. School, Aruppukottai</div>
+        <div class="edu-uni">Tamil Nadu State Board</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">2004</div>
+        <div class="edu-degree">Secondary School Leaving Certificate (SSLC)</div>
+        <div class="edu-inst">Devangar Hr. Sec. School, Aruppukottai</div>
+        <div class="edu-uni">Tamil Nadu State Board</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-label">Let's Connect</div>
+      <h2 class="sec-title">Get In <span>Touch</span></h2>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-info reveal">
+        <p>Open to new opportunities in Linux Administration, Cloud Infrastructure, and DevOps Engineering roles. Based in Tamil Nadu, with valid passport through 2032.</p>
+        <ul class="contact-list">
+          <li>
+            <div class="ci-icon">📧</div>
+            <div>
+              <div class="ci-label">Email</div>
+              <div class="ci-val">vazeerahmed037@gmail.com</div>
+            </div>
+          </li>
+          <li>
+            <div class="ci-icon">📞</div>
+            <div>
+              <div class="ci-label">Phone</div>
+              <div class="ci-val">+91 94439 45271</div>
+            </div>
+          </li>
+          <li>
+            <div class="ci-icon">📍</div>
+            <div>
+              <div class="ci-label">Location</div>
+              <div class="ci-val">Aruppukottai, Tamil Nadu, India</div>
+            </div>
+          </li>
+          <li>
+            <div class="ci-icon">🌐</div>
+            <div>
+              <div class="ci-label">Languages</div>
+              <div class="ci-val">English &amp; Tamil</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="contact-card reveal">
+        <h3>Personal Details</h3>
+        <p>Additional profile information</p>
+        <div class="personal-facts">
+          <div class="pf-row">
+            <span class="pf-key">Date of Birth</span>
+            <span class="pf-val">27 January 1989</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-key">Gender</span>
+            <span class="pf-val">Male</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-key">Nationality</span>
+            <span class="pf-val">Indian</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-key">Marital Status</span>
+            <span class="pf-val">Married</span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-key">Passport</span>
+            <span class="pf-val">V8406835 <span style="color:var(--accent);font-size:0.75rem">(Valid till May 2032)</span></span>
+          </div>
+          <div class="pf-row">
+            <span class="pf-key">Current Employer</span>
+            <span class="pf-val">Infosys Limited</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>M. Vazeer Ahmed</span> · Linux Systems Consultant · © 2025 · Built with ❤️ from Tamil Nadu
+</footer>
+
+<script>
+/* ── CANVAS PARTICLES ─────────────────────────────── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.4 + 0.05;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.color = Math.random() > 0.6 ? '#00e5a0' : Math.random() > 0.5 ? '#00b8ff' : '#7b61ff';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function connectParticles() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = '#00e5a0';
+        ctx.globalAlpha = (1 - dist / 100) * 0.06;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  connectParticles();
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ── TYPED EFFECT ─────────────────────────────────── */
+const phrases = [
+  'Linux Administrator',
+  'Infosys Consultant',
+  'RHEL Migration Expert',
+  'CCNA Certified',
+  'Enterprise IT Pro'
+];
+let pi = 0, ci = 0, del = false, el = document.getElementById('typed');
+
+function type() {
+  const phrase = phrases[pi];
+  if (!del) {
+    el.textContent = phrase.slice(0, ++ci);
+    if (ci === phrase.length) { del = true; setTimeout(type, 1800); return; }
+  } else {
+    el.textContent = phrase.slice(0, --ci);
+    if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
+  }
+  setTimeout(type, del ? 45 : 80);
+}
+type();
+
+/* ── SCROLL REVEAL ────────────────────────────────── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (i * 0.08) + 's';
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── SMOOTH NAV HIGHLIGHT ─────────────────────────── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.id; });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--accent)' : '';
+  });
+});
+</script>
+</body>
+</html>
